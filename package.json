@@ -1,0 +1,28 @@
+{
+  "name": "base58-encode",
+  "version": "0.1.0",
+  "description": "Fast and beautiful base58 encoder. No dependencies, 40LOC.",
+  "main": "index.js",
+  "files": ["index.js"],
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paulmillr/base58-encode.js.git"
+  },
+  "keywords": [
+    "base58",
+    "encode",
+    "encoder",
+    "base-x",
+    "base",
+    "base64"
+  ],
+  "author": "Paul Miller (https://paulmillr.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/paulmillr/base58-encode.js/issues"
+  },
+  "homepage": "https://github.com/paulmillr/base58-encode.js#readme"
+}
