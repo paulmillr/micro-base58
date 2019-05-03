@@ -1,4 +1,5 @@
 // MIT License (c) 2019, Paul Miller (https://paulmillr.com).
+'use strict';
 const base58 = (source, alphabet = base58.BTC) => {
   const len = source.length;
   if (len === 0) return '';
