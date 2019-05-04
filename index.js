@@ -5,11 +5,11 @@ const base58 = (source, alphabet = base58.BTC) => {
   if (len === 0) return '';
 
   const base = alphabet.length;
-  const buf = typeof source !== 'string';
+  const str = typeof source === 'string';
   const chars = [0];
 
   for (let i = 0; i < len; ++i) {
-    let carry = buf ? source[i] : source.charCodeAt(i);
+    let carry = str ? source.charCodeAt(i) : source[i];
     for (let j = 0; j < chars.length; ++j) {
       carry += chars[j] << 8;
       chars[j] = carry % base;
@@ -25,7 +25,7 @@ const base58 = (source, alphabet = base58.BTC) => {
   let string = '';
   // Leading zeros.
   const lead = alphabet[0];
-  for (let k = 0; source[k] === 0 || source[k] === '\0' && k < len - 1; ++k) string += lead;
+  for (let k = 0; (str ? source.charCodeAt(k) : source[k]) === 0 && k < len - 1; ++k) string += lead;
   // Convert digits to string.
   for (let q = chars.length - 1; q >= 0; --q) string += alphabet[chars[q]]
 
