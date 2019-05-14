@@ -1,6 +1,6 @@
 {
   "name": "base58-encode",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Fast and beautiful base58 encoder. No dependencies, 40LOC.",
   "main": "index.js",
   "files": ["index.js"],
