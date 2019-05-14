@@ -3,4 +3,4 @@ declare const base58: {
   BTC: string;
   XRP: string;
 };
-export = base58;
+export default base58;

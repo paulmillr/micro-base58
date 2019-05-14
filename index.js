@@ -34,4 +34,7 @@ const base58 = (source, alphabet = base58.BTC) => {
 base58.BTC = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 base58.XRP = 'rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz';
 
-if (typeof module !== 'undefined') module.exports = base58;
+if (typeof module !== 'undefined') {
+  module.exports = base58;
+  base58.default = base58;
+}
