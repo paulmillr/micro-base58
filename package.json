@@ -3,7 +3,7 @@
   "version": "0.1.2",
   "description": "Fast and beautiful base58 encoder. No dependencies, 40LOC.",
   "main": "index.js",
-  "files": ["index.js"],
+  "files": ["index.js", "index.d.ts"],
   "scripts": {
     "test": "node test.js"
   },
