@@ -7,6 +7,7 @@
   "scripts": {
     "test": "node test.js"
   },
+  "homepage": "https://github.com/paulmillr/base58-encode.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/paulmillr/base58-encode.js.git"
@@ -20,9 +21,5 @@
     "base64"
   ],
   "author": "Paul Miller (https://paulmillr.com)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/paulmillr/base58-encode.js/issues"
-  },
-  "homepage": "https://github.com/paulmillr/base58-encode.js#readme"
+  "license": "MIT"
 }
