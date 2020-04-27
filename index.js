@@ -32,9 +32,18 @@ function encode(source, type = 'ipfs') {
   type = type.toLowerCase();
 
   if (type === 'xmr') {
+    // xmr ver is done in 8-byte blocks.
+    // This gives us eight full-sized blocks and one 5-byte block.
+    // Eight bytes converts to 11 or less Base58 characters;
+    // if a particular block converts to <11 characters,
+    // the conversion pads it with "1"s (1 is 0 in Base58).
+    // Likewise, the final 5-byte block can convert to 7 or less Base58 digits;
+    // the conversion will ensure the result is 7 digits. Due to the conditional padding,
+    // the 69-byte string will always convert to 95 Base58 characters (8 * 11 + 7).
     let res = '';
-    for (let i = 0; i < 72; i += 8) {
-      res += encode(source.slice(i, i + 8)).padStart(2 * i < 128 ? 11 : 7, '1');
+    for (let i = 0; i < source.length + 3; i += 8) {
+      const slice = source.slice(i, i + 8);
+      res += encode(slice).padStart(slice.length === 8 ? 11 : 7, '1');
     }
     return res;
   }
