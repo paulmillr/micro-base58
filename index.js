@@ -28,36 +28,34 @@ alphabet.xrp = 'rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz';
 
 function encode(source, type = 'ipfs') {
   if (source.length === 0) return '';
-  const isString = typeof source === 'string';
-  const input = isString ? new TextEncoder().encode(source) : source;
-
+  if (typeof source === 'string') source = new TextEncoder().encode(source);
   type = type.toLowerCase();
-  if (type === 'xmr') return xmre(source);
+
+  if (type === 'xmr') {
+    let res = '';
+    for (let i = 0; i < 72; i += 8) {
+      res += encode(source.slice(i, i + 8)).padStart(2 * i < 128 ? 11 : 7, '1');
+    }
+    return res;
+  }
   if (!alphabet.hasOwnProperty(type)) throw new Error('invalid type');
   const letters = alphabet[type];
 
   // Convert Uint8Array to BigInt, Big Endian.
-  let x = BigInt('0x' + arrayToHex(input));
+  let x = BigInt('0x' + arrayToHex(source));
   let output = [];
+
   while (x > 0) {
     const mod = Number(x % 58n);
     x = x / 58n;
     output.push(letters[mod]);
   }
 
-  for (let i = 0; input[i] === 0; i++) {
+  for (let i = 0; source[i] === 0; i++) {
     output.push(letters[0]);
   }
 
   return output.reverse().join('');
-}
-
-function xmre(array) {
-  let res = '';
-  for (let i = 0; i < 72; i += 8) {
-    res += encode(arrayToHex(array.slice(i, i + 8))).padStart(2 * i < 128 ? 11 : 7, '1');
-  }
-  return res;
 }
 
 // Doesn't work for all cases, see test.js. Need some debugging.
@@ -105,5 +103,6 @@ if (typeof window !== 'undefined') {
   window.base58 = encode;
 } else {
   exports.encode = encode;
+  exports.__esModule = true;
   exports.default = encode;
 }
