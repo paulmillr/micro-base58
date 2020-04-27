@@ -1,19 +1,29 @@
 const assert = require('assert');
-const base58 = require('.');
+const base58 = require('.').encode;
 const vectors2 = require('./vectors.json');
 
-function toUI8A(hex) {
-  if (hex.length % 2 !== 0) throw new RangeError("hex length is invalid");
+function arrayToHex(uint8a) {
+  // pre-caching chars could speed this up 6x.
+  let hex = '';
+  for (let i = 0; i < uint8a.length; i++) {
+    hex += uint8a[i].toString(16).padStart(2, '0');
+  }
+  return hex;
+}
+
+function hexToArray(hex) {
+  hex = hex.length & 1 ? `0${hex}` : hex;
   const array = new Uint8Array(hex.length / 2);
-  for (let i = 0; i < hex.length; i += 2) {
-    array[i / 2] = parseInt(hex.substr(i, 2), 16);
+  for (let i = 0; i < array.length; i++) {
+    let j = i * 2;
+    array[i] = Number.parseInt(hex.slice(j, j + 2), 16);
   }
   return array;
 }
 
 const vectors1 = [
   {decoded: 'hello world', encoded: 'StV1DL6CwTryKyV'},
-  {decoded: Buffer.from('hello world'), encoded: 'StV1DL6CwTryKyV'},
+  //{decoded: Buffer.from('hello world'), encoded: 'StV1DL6CwTryKyV'},
   {decoded: new TextEncoder().encode('hello world'), encoded: 'StV1DL6CwTryKyV'},
   {decoded: 'hello world', encoded: 'StVrDLaUATiyKyV', isXRP: true},
   {decoded: '\0\0hello world', encoded: '11StV1DL6CwTryKyV'},
@@ -26,14 +36,18 @@ const vectors1 = [
 ];
 
 for (const vector of vectors1) {
-  // console.log(vector);
-  const alphabet = vector.isXRP && base58.XRP;
-  const vectorDecodedArr = typeof vector.decoded === 'string' ?
-    new TextEncoder().encode(vector.decoded) :
-    Uint8Array.from(vector.decoded);
+  console.log(vector);
+  const alphabet = vector.isXRP && 'xrp';
+
+  let dec = vector.decoded;
+  const vectorDecodedArr = typeof dec === 'string' ?
+    new TextEncoder().encode(dec) :
+    Uint8Array.from(dec);
   const vectorDecodedStr = new TextDecoder().decode(vectorDecodedArr);
 
-  const encoded = base58(vector.decoded, alphabet);
+  let encoded = base58(vector.decoded, alphabet);
+  if (encoded instanceof Uint8Array) encoded = arrayToHex(dec);
+
   // const decoded = base58.decode(encoded, alphabet);
   // const decodedArr = new TextEncoder().encode(decoded);
 
@@ -42,7 +56,7 @@ for (const vector of vectors1) {
 }
 
 for (const {decodedHex, encoded} of vectors2) {
-  const txt = toUI8A(decodedHex);
+  const txt = hexToArray(decodedHex);
   assert.equal(base58(txt), encoded);
 }
 

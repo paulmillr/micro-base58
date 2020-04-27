@@ -1,16 +1,16 @@
 {
-  "name": "base58-encode",
-  "version": "0.2.0",
-  "description": "Fast and beautiful base58 encoder. No dependencies, 40LOC.",
+  "name": "micro-base58",
+  "version": "0.3.0",
+  "description": "Fast and beautiful base58 encoder without dependencies.",
   "main": "index.js",
   "files": ["index.js", "index.d.ts"],
   "scripts": {
     "test": "node test.js"
   },
-  "homepage": "https://github.com/paulmillr/base58-encode.js",
+  "homepage": "https://github.com/paulmillr/micro-base58",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/paulmillr/base58-encode.js.git"
+    "url": "git+https://github.com/paulmillr/micro-base58.git"
   },
   "keywords": [
     "base58",

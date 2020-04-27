@@ -1,34 +1,64 @@
-// MIT License (c) 2019, Paul Miller (https://paulmillr.com).
+// MIT License (c) 2020, Paul Miller (https://paulmillr.com).
 'use strict';
-function ui8aToHex(ui8a) {
-  return Array.from(ui8a)
-    .map(c => c.toString(16).padStart(2, '0'))
-    .join('');
+function arrayToHex(uint8a) {
+  // pre-caching chars could speed this up 6x.
+  let hex = '';
+  for (let i = 0; i < uint8a.length; i++) {
+    hex += uint8a[i].toString(16).padStart(2, '0');
+  }
+  return hex;
 }
 
-function encode(source, alphabet = base58.BTC) {
-  if (source.length === 0) return '';
-  const alength = BigInt(alphabet.length);
+function hexToArray(hex) {
+  hex = hex.length & 1 ? `0${hex}` : hex;
+  const array = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < array.length; i++) {
+    let j = i * 2;
+    array[i] = Number.parseInt(hex.slice(j, j + 2), 16);
+  }
+  return array;
+}
 
-  let output = [];
-  const input = typeof source === 'string' ? new TextEncoder().encode(source) : source;
+const alphabet = {};
+alphabet.ipfs = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+alphabet.flickr = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
+alphabet.btc = alphabet.ipfs;
+alphabet.xrp = 'rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz';
+// and xmr
+
+function encode(source, type = 'ipfs') {
+  if (source.length === 0) return '';
+  const isString = typeof source === 'string';
+  const input = isString ? new TextEncoder().encode(source) : source;
+
+  type = type.toLowerCase();
+  if (type === 'xmr') return xmre(source);
+  if (!alphabet.hasOwnProperty(type)) throw new Error('invalid type');
+  const letters = alphabet[type];
 
   // Convert Uint8Array to BigInt, Big Endian.
-  let x = BigInt('0x' + ui8aToHex(input));
+  let x = BigInt('0x' + arrayToHex(input));
+  let output = [];
   while (x > 0) {
-    const mod = Number(x % alength);
-    // Math.floor() is same as `| 0`, be we can't use it on bigints.
-    x = x / alength;
-    output.push(alphabet[mod]);
+    const mod = Number(x % 58n);
+    x = x / 58n;
+    output.push(letters[mod]);
   }
 
   for (let i = 0; input[i] === 0; i++) {
-    output.push(alphabet[0]);
+    output.push(letters[0]);
   }
 
-  const str = output.reverse().join('');
-  return str;
-};
+  return output.reverse().join('');
+}
+
+function xmre(array) {
+  let res = '';
+  for (let i = 0; i < 72; i += 8) {
+    res += encode(arrayToHex(array.slice(i, i + 8))).padStart(2 * i < 128 ? 11 : 7, '1');
+  }
+  return res;
+}
 
 // Doesn't work for all cases, see test.js. Need some debugging.
 // function decode(output, alphabet = base58.BTC) {
@@ -71,12 +101,9 @@ function encode(source, alphabet = base58.BTC) {
 // }
 // const base58 = {encode, decode};
 
-const base58 = encode;
-base58.BTC = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-base58.XRP = 'rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz';
-base58.FLC = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'; // flickr
-
-if (typeof module !== 'undefined') {
-  module.exports = base58;
-  base58.default = base58;
+if (typeof window !== 'undefined') {
+  window.base58 = encode;
+} else {
+  exports.encode = encode;
+  exports.default = encode;
 }

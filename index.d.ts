@@ -1,6 +1,3 @@
-declare const base58: {
-  (source: string|Uint8Array, alphabet?: string): string;
-  BTC: string;
-  XRP: string;
-};
-export default base58;
+type B58TYPE = 'ipfs' | 'flickr' | 'btc' | 'xrp' | 'xmr';
+export function encode(source: string|Uint8Array, type?: B58TYPE): string;
+export default encode;

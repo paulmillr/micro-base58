@@ -1,21 +1,34 @@
-# base58-encode.js
+# micro-base58
 
-Fast and beautiful base58 encoder. No dependencies, 40LOC.
+Fast and beautiful base58 encoder without dependencies.
 
-> `npm install base58-encode`
+> `npm install micro-base58`
 
-Usage: `base58(text[, alphabet])`. Included alphabets: `base58.BTC` (default), `base58.XRP`
+Usage: `base58(text[, alphabet])`.
+
+Included alphabets: `ipfs`/`btc` (default), `xrp`, `xmr`, `flickr`
 
 First argument could be `string`, `Buffer` or `UInt8Array`.
 
-```javascript
-const base58 = require('base58-encode');
+```js
+const base58 = require('micro-base58');
 
 base58('hello world'); // => 'StV1DL6CwTryKyV'
-base58(Buffer.from('hello world')) // node
 new Uint8Array(Array.from('hello world').map(c => c.charCodeAt(0))) // Browser
 // => 'StV1DL6CwTryKyV'
-base58('hello world', base58.XRP); // => 'StVrDLaUATiyKyV'
+base58('hello world', 'xrp'); // => 'StVrDLaUATiyKyV'
+```
+
+We don't include base58check because it requires sha256. You can implement it like this:
+
+```js
+function base58check(array) {
+  const checksum = sha256(sha256(array)).slice(0, 4);
+  const data = new Uint8Array(array.length + 4);
+  data.set(array);
+  data.set(checksum, array.length)
+  return base58(data);
+}
 ```
 
 ## License
