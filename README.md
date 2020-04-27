@@ -33,6 +33,6 @@ function base58check(array) {
 
 ## License
 
-MIT License (c) 2019, Paul Miller (https://paulmillr.com).
+MIT License (c) 2020, Paul Miller (https://paulmillr.com).
 
 See LICENSE file.
