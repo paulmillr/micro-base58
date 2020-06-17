@@ -1,6 +1,6 @@
 {
   "name": "micro-base58",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Fast and beautiful base58 encoder without dependencies.",
   "main": "index.js",
   "files": ["index.js", "index.d.ts"],
