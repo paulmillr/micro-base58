@@ -1,5 +1,6 @@
 const assert = require('assert');
 const base58 = require('.').encode;
+const decode = require('.').decode;
 const vectors2 = require('./vectors.json');
 
 function arrayToHex(uint8a) {
@@ -47,12 +48,10 @@ for (const vector of vectors1) {
 
   let encoded = base58(vector.decoded, alphabet);
   if (encoded instanceof Uint8Array) encoded = arrayToHex(dec);
-
-  // const decoded = base58.decode(encoded, alphabet);
-  // const decodedArr = new TextEncoder().encode(decoded);
-
   assert.equal(encoded, vector.encoded);
-  // assert.deepEqual(decodedArr, vectorDecodedArr);
+
+  const decoded = decode(encoded, alphabet);
+  assert.deepEqual(decoded, vectorDecodedArr);
 }
 
 for (const {decodedHex, encoded} of vectors2) {
