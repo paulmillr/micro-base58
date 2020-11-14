@@ -31,6 +31,10 @@ function base58check(array) {
 }
 ```
 
+## Other packages
+
+Check out a [separate package for bech32](https://github.com/paulmillr/micro-bech32).
+
 ## License
 
 MIT License (c) 2020, Paul Miller (https://paulmillr.com).
