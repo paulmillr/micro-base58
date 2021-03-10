@@ -1,6 +1,6 @@
 const assert = require('assert');
-const base58 = require('.').encode;
-const decode = require('.').decode;
+const base58 = require('..').encode;
+const decode = require('..').decode;
 const vectors2 = require('./vectors.json');
 
 function arrayToHex(uint8a) {
