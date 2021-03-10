@@ -1,6 +1,6 @@
 // MIT License (c) 2020, Paul Miller (https://paulmillr.com).
 'use strict';
-function bytesToHex(uint8a) {
+function bytesToHex(uint8a: Uint8Array) {
   // pre-caching chars could speed this up 6x.
   let hex = '';
   for (let i = 0; i < uint8a.length; i++) {
@@ -9,17 +9,37 @@ function bytesToHex(uint8a) {
   return hex;
 }
 
-const alphabet = {};
-alphabet.ipfs = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-alphabet.flickr = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
-alphabet.btc = alphabet.ipfs;
-alphabet.xrp = 'rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz';
-// and xmr
+interface Alphabets {
+  ipfs: string;
+  btc: string;
+  flickr: string;
+  xmr: string;
+  xrp: string;
+}
 
-function encode(source, type = 'ipfs') {
+const COMMON_B58_ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+
+const alphabet: Alphabets = {
+  ipfs: COMMON_B58_ALPHABET,
+  btc: COMMON_B58_ALPHABET,
+  xmr: COMMON_B58_ALPHABET,
+  flickr: '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ',
+  xrp: 'rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz'
+};
+
+export function encode(source: string | Uint8Array, type: keyof Alphabets = 'ipfs') {
   if (source.length === 0) return '';
-  if (typeof source === 'string') source = new TextEncoder().encode(source);
-  type = type.toLowerCase();
+  if (typeof source === 'string') {
+    if (typeof TextEncoder !== 'undefined') {
+      source = new TextEncoder().encode(source);
+    } else if (typeof Buffer !== 'undefined') {
+      source = Buffer.from(source, 'utf8');
+    } else {
+      // note: only supports ASCII
+      source = new Uint8Array(source.split('').map(c => c.charCodeAt(0)));
+    }
+  }
+  type = type.toLowerCase() as keyof Alphabets;
 
   if (type === 'xmr') {
     // xmr ver is done in 8-byte blocks.
@@ -57,7 +77,7 @@ function encode(source, type = 'ipfs') {
   return output.reverse().join('');
 }
 
-function decode(output, type = 'ipfs') {
+export function decode(output: string, type: keyof Alphabets = 'ipfs') {
   if (output.length === 0) return new Uint8Array([]);
   const letters = alphabet[type];
   const bytes = [0];
@@ -90,12 +110,4 @@ function decode(output, type = 'ipfs') {
   return new Uint8Array(bytes.reverse());
 }
 
-if (typeof exports !== 'undefined') {
-  exports.encode = encode;
-  exports.decode = decode;
-  exports.__esModule = true;
-  exports.default = encode;
-} else {
-  window.base58 = encode;
-  window.base58.decode = decode;
-}
+export default encode;
