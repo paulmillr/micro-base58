@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Jest Tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": [
+        "${workspaceRoot}/node_modules/.bin/jest",
+        "--runInBand"
+      ],
+    }
+  ]
+}
