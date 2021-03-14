@@ -1,4 +1,4 @@
-// MIT License (c) 2020, Paul Miller (https://paulmillr.com).
+/*! micro-base58 - MIT License (c) 2020, Paul Miller (https://paulmillr.com) */
 'use strict';
 function bytesToHex(uint8a: Uint8Array) {
   // pre-caching chars could speed this up 6x.
@@ -32,8 +32,6 @@ export function encode(source: string | Uint8Array, type: keyof Alphabets = 'ipf
   if (typeof source === 'string') {
     if (typeof TextEncoder !== 'undefined') {
       source = new TextEncoder().encode(source);
-    } else if (typeof Buffer !== 'undefined') {
-      source = Buffer.from(source, 'utf8');
     } else {
       // note: only supports ASCII
       source = new Uint8Array(source.split('').map(c => c.charCodeAt(0)));

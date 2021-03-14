@@ -23,9 +23,6 @@ function encode(source, type = 'ipfs') {
         if (typeof TextEncoder !== 'undefined') {
             source = new TextEncoder().encode(source);
         }
-        else if (typeof Buffer !== 'undefined') {
-            source = Buffer.from(source, 'utf8');
-        }
         else {
             source = new Uint8Array(source.split('').map(c => c.charCodeAt(0)));
         }
