@@ -1,4 +1,5 @@
-/*! micro-base58 - MIT License (c) 2020, Paul Miller (https://paulmillr.com) */
+/*! micro-base58 - MIT License (c) 2021, Paul Miller (https://paulmillr.com) */
+
 'use strict';
 function bytesToHex(uint8a: Uint8Array) {
   // pre-caching chars could speed this up 6x.
