@@ -2,6 +2,8 @@
 
 Fast and beautiful base58 encoder without dependencies.
 
+**Deprecated. Switch to [micro-base-x](https://github.com/paulmillr/micro-base-x).**
+
 > `npm install micro-base58`
 
 Usage: `base58(text[, alphabet])`.
