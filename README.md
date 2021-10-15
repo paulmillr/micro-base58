@@ -2,7 +2,7 @@
 
 Fast and beautiful base58 encoder without dependencies.
 
-**Deprecated. Switch to [micro-base](https://github.com/paulmillr/micro-base).**
+**Deprecated. Switch to [micro-base](https://github.com/paulmillr/micro-base) for audited version of base58 and others.**
 
 --------
 
